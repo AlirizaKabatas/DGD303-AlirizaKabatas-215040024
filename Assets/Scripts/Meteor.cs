@@ -2,32 +2,45 @@ using UnityEngine;
 
 public class Meteor : MonoBehaviour
 {
-    public float moveSpeedX = 0f;
-    public float moveSpeedY = -2f;
-    public float rotateSpeed = 100f; 
+    public float moveSpeed = 5f; // Meteorun hareket hýzý
+    public float rotationSpeed = 100f; // Meteorun dönüþ hýzý
+    public bool rotate = true; // Meteor kendi ekseni etrafýnda dönecek mi?
+    public float resetTime = 8f; // Hareket süresi (saniye cinsinden)
+    public Vector3 startPosition; // Baþlangýç pozisyonu
+    public Vector3 moveDirection = Vector3.left; // Hareket yönü
+
+    private float timer; // Süreyi takip eden deðiþken
+
+    void Start()
+    {
+        startPosition = transform.position; // Baþlangýç pozisyonunu kaydet
+        timer = resetTime; // Zamanlayýcýyý baþlat
+    }
 
     void Update()
     {
+        // Meteorun hareketi
+        transform.position += moveDirection.normalized * moveSpeed * Time.deltaTime;
 
-        transform.Translate(new Vector3(moveSpeedX, moveSpeedY, 0) * Time.deltaTime, Space.World);
-
-        transform.Rotate(Vector3.forward * rotateSpeed * Time.deltaTime);
-
-        Vector3 screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
-        if (transform.position.x < -screenBounds.x - 1 || transform.position.x > screenBounds.x + 1 ||
-            transform.position.y < -screenBounds.y - 1 || transform.position.y > screenBounds.y + 1)
+        // Meteorun dönüþü (isteðe baðlý)
+        if (rotate)
         {
-            Destroy(gameObject);
+            transform.Rotate(Vector3.forward, rotationSpeed * Time.deltaTime);
+        }
+
+        // Zamanlayýcýyý azalt
+        timer -= Time.deltaTime;
+
+        // Süre dolduysa meteoru sýfýrla
+        if (timer <= 0)
+        {
+            ResetMeteor();
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void ResetMeteor()
     {
-        if (collision.CompareTag("Player"))
-        {
-            // Oyuncuya hasar ver
-            GameManager.Instance.PlayerTakeDamage();
-            Destroy(gameObject);
-        }
+        transform.position = startPosition; // Pozisyonu sýfýrla
+        timer = resetTime; // Zamanlayýcýyý sýfýrla
     }
 }

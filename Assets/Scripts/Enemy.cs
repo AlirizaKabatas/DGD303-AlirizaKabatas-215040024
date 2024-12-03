@@ -2,31 +2,33 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public int health = 2; // Düþmanýn baþlangýç saðlýðý
+    public int health = 2;
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        // Eðer çarpan obje lazer ise
         if (other.CompareTag("PlayerBullet"))
         {
-            TakeDamage(1); // 1 hasar al
-            Destroy(other.gameObject); // Lazer yok edilir
+            TakeDamage(1);
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("Meteor"))
+        {
+            TakeDamage(2); 
         }
     }
 
     void TakeDamage(int damage)
     {
-        health -= damage; // Saðlýðý azalt
+        health -= damage;
 
         if (health <= 0)
         {
-            Die(); // Saðlýk sýfýra ulaþýrsa yok ol
+            Die(); 
         }
     }
 
     void Die()
     {
-        Destroy(gameObject); // Düþmaný yok et
-        // Buraya patlama efekti veya ses ekleyebilirsiniz
+        Destroy(gameObject); 
     }
 }
