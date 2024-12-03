@@ -3,35 +3,41 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int health = 10; 
+    public int health = 10; // Oyuncunun baþlangýç saðlýðý
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Meteor"))
         {
-            TakeDamage(10);
+            TakeDamage(10); // Meteordan 10 hasar al
+        }
+        else if (other.CompareTag("EnemyBullet"))
+        {
+            TakeDamage(3); // Düþman mermisinden 4 hasar al
+            Destroy(other.gameObject); // Mermiyi yok et
         }
     }
 
     void TakeDamage(int damage)
     {
-        health -= damage; 
+        health -= damage; // Saðlýðý azalt
 
         if (health <= 0)
         {
-            Die();
+            Die(); // Saðlýk sýfýra ulaþýrsa öl
         }
     }
 
     void Die()
     {
-        Destroy(gameObject);
+        Destroy(gameObject); // Oyuncuyu yok et
 
         GameOver();
     }
 
     void GameOver()
     {
+        // Ayný sahneyi yeniden yükle (Game Over)
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
