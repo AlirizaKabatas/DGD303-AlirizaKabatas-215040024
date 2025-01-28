@@ -16,6 +16,16 @@ public class PlayerHealth : MonoBehaviour
             TakeDamage(3); // Düþman mermisinden 4 hasar al
             Destroy(other.gameObject); // Mermiyi yok et
         }
+        else if (other.CompareTag("EnemyMisille"))
+        {
+            TakeDamage(10); // Düþman mermisinden 4 hasar al
+            Destroy(other.gameObject); // Mermiyi yok et
+        }
+        else if (other.CompareTag("BossBullet"))
+        {
+            TakeDamage(4); // Düþman mermisinden 4 hasar al
+            Destroy(other.gameObject); // Mermiyi yok et
+        }
     }
 
     void TakeDamage(int damage)
