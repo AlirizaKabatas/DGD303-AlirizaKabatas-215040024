@@ -13,17 +13,22 @@ public class PlayerHealth : MonoBehaviour
         }
         else if (other.CompareTag("EnemyBullet"))
         {
-            TakeDamage(3); // Düþman mermisinden 4 hasar al
+            TakeDamage(3); 
             Destroy(other.gameObject); // Mermiyi yok et
         }
         else if (other.CompareTag("EnemyMisille"))
         {
-            TakeDamage(10); // Düþman mermisinden 4 hasar al
+            TakeDamage(10);
             Destroy(other.gameObject); // Mermiyi yok et
         }
         else if (other.CompareTag("BossBullet"))
         {
-            TakeDamage(4); // Düþman mermisinden 4 hasar al
+            TakeDamage(4);
+            Destroy(other.gameObject); // Mermiyi yok et
+        }
+        else if (other.CompareTag("BossBullet2"))
+        {
+            TakeDamage(6);
             Destroy(other.gameObject); // Mermiyi yok et
         }
     }

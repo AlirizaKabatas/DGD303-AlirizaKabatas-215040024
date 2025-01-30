@@ -1,38 +1,65 @@
 using UnityEngine;
+using System.Collections;
 
 public class EnemyBulletShoot : MonoBehaviour
 {
     public GameObject bulletPrefab; // Mermi prefab'ý
-    public Transform[] bulletSpawnPoints; // Merminin çýkýþ noktalarý dizisi
-    public float bulletSpeed = 5f; // Merminin hýzý
-    public float fireRate = 2f; // Ateþ etme aralýðý (saniye cinsinden)
-    public float fireCooldown; // Ateþ zamanlamasý için cooldown
+    public Transform[] bulletSpawnPoints; // Mermi çýkýþ noktalarý
+    public float bulletSpeed = 5f; // Mermi hýzý
+    public float fireRate = 2f; // Normal ateþ aralýðý
+    public float fireCooldown; // Normal ateþ için cooldown
+    public float ultiCooldown = 8f; // Ulti süresi
+    public int ultiShots = 3; // Ulti sýrasýnda kaç kez ateþ edecek
+    public float ultiShotInterval = 1f; // Ulti sýrasýnda atýþlar arasý süre
+
+    private bool isUltiActive = false; // Ulti aktif mi?
+    private float ultiTimer = 0f; // Ulti için zamanlayýcý
 
     void Update()
     {
-        // Ateþ zamanýný kontrol et
+        ultiTimer += Time.deltaTime;
         fireCooldown -= Time.deltaTime;
 
-        if (fireCooldown <= 0f)
+        if (ultiTimer >= ultiCooldown)
         {
-            ShootBullet(); // Mermi ateþle
-            fireCooldown = fireRate; // Cooldown'u sýfýrla
+            StartCoroutine(UltiAttack());
+            ultiTimer = 0f;
+        }
+
+        if (!isUltiActive && fireCooldown <= 0f)
+        {
+            ShootBullet();
+            fireCooldown = fireRate;
         }
     }
 
     void ShootBullet()
     {
-        // Rastgele bir mermi çýkýþ noktasý seç
         Transform spawnPoint = bulletSpawnPoints[Random.Range(0, bulletSpawnPoints.Length)];
+        Fire(spawnPoint);
+    }
 
-        // Mermi objesini spawn et
+    IEnumerator UltiAttack()
+    {
+        isUltiActive = true;
+
+        for (int i = 0; i < ultiShots; i++)
+        {
+            foreach (Transform spawnPoint in bulletSpawnPoints)
+            {
+                Fire(spawnPoint);
+            }
+            yield return new WaitForSeconds(ultiShotInterval);
+        }
+
+        isUltiActive = false;
+    }
+
+    void Fire(Transform spawnPoint)
+    {
         GameObject bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
-
-        // Merminin Rigidbody2D'sine hýz uygula
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        rb.velocity = -bullet.transform.up * bulletSpeed; // Mermi aþaðý doðru hareket eder
-
-        // Merminin otomatik yok olma süresi
+        rb.velocity = -spawnPoint.up * bulletSpeed;
         Destroy(bullet, 5f);
     }
 }

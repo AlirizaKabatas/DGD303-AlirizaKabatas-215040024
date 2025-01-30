@@ -13,6 +13,7 @@ public class LazerShoot : MonoBehaviour
         {
             ShootLazer();
         }
+
     }
 
     void ShootLazer()
@@ -23,8 +24,9 @@ public class LazerShoot : MonoBehaviour
         // Lazerin Rigidbody2D'sine hýz uygula
         Rigidbody2D rb = lazer.GetComponent<Rigidbody2D>();
         rb.velocity = lazer.transform.up * lazerSpeed; // Lazer kendi local Y ekseninde hareket eder
-
-        // Lazerin otomatik yok olma süresi
         Destroy(lazer, 5f);
+        // Lazerin otomatik yok olma süresi kaldýrýldý
+        // Destroy(lazer, 5f);  // Bu satýrý kaldýrdýk
     }
+
 }

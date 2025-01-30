@@ -12,6 +12,7 @@ TagManager:
   - Projectile
   - BossBullet
   - EnemyMisille
+  - BossBullet2
   layers:
   - Default
   - TransparentFX
