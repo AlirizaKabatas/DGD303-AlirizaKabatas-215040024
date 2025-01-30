@@ -1,9 +1,18 @@
 using UnityEngine;
+using TMPro; // TextMeshPro için gerekli namespace
 using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public int health = 10; // Oyuncunun baþlangýç saðlýðý
+    public int health = 50; // Oyuncunun baþlangýç saðlýðý
+    public int maxHealth = 50; // Maksimum saðlýk
+    public TextMeshProUGUI healthText; // TextMeshPro için referans
+
+    void Start()
+    {
+        // Ýlk baþta saðlýk bilgisini güncelle
+        UpdateHealthText();
+    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -13,7 +22,7 @@ public class PlayerHealth : MonoBehaviour
         }
         else if (other.CompareTag("EnemyBullet"))
         {
-            TakeDamage(3); 
+            TakeDamage(2);
             Destroy(other.gameObject); // Mermiyi yok et
         }
         else if (other.CompareTag("EnemyMisille"))
@@ -23,12 +32,12 @@ public class PlayerHealth : MonoBehaviour
         }
         else if (other.CompareTag("BossBullet"))
         {
-            TakeDamage(4);
+            TakeDamage(3);
             Destroy(other.gameObject); // Mermiyi yok et
         }
         else if (other.CompareTag("BossBullet2"))
         {
-            TakeDamage(6);
+            TakeDamage(5);
             Destroy(other.gameObject); // Mermiyi yok et
         }
     }
@@ -41,18 +50,30 @@ public class PlayerHealth : MonoBehaviour
         {
             Die(); // Saðlýk sýfýra ulaþýrsa öl
         }
+
+        // Saðlýk deðiþtiðinde metni güncelle
+        UpdateHealthText();
+    }
+
+    void UpdateHealthText()
+    {
+        // Saðlýk bilgisi TextMeshPro'ya yazdýrýlýyor
+        if (healthText != null)
+        {
+            healthText.text = "HP: " + health.ToString(); // HP: 50 þeklinde yazdýrýlacak
+        }
     }
 
     void Die()
     {
         Destroy(gameObject); // Oyuncuyu yok et
 
-        GameOver();
+        GameOver(); // Oyuncu öldü, GameOver iþlevi çaðrýlacak
     }
 
     void GameOver()
     {
-        // Ayný sahneyi yeniden yükle (Game Over)
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // Oyuncu öldü ve oyunun bitmesini istemiyorsunuz, EscMenu sahnesine geçiþ yapalým
+        SceneManager.LoadScene("EscMenu"); // EscMenu sahnesine geçiþ yap
     }
 }
